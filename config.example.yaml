@@ -1,0 +1,38 @@
+# TeleOps 配置文件示例
+# 复制为 config.yaml 后按需修改（config.yaml 不会被 git 跟踪）
+
+server:
+  host: 127.0.0.1
+  port: 8800
+  # 后台登录口令；留空表示不校验（仅建议在本机使用时留空）
+  auth_token: ""
+
+storage:
+  # 相对路径基于项目根目录
+  data_dir: data
+  database_url: "sqlite+aiosqlite:///data/teleops.db"
+  media_dir: data/media
+  # 下载的媒体保留天数，0 表示不清理
+  media_retention_days: 3
+
+plugins:
+  # 插件搜索目录，可写多个
+  dirs:
+    - plugins
+  # 文件变动时自动热重载
+  auto_reload: true
+  reload_interval: 5
+
+runtime:
+  # 全局发送间隔（秒），防止触发 Telegram 限流
+  send_interval: 3.0
+  # 单个工作流单次运行最多处理条数
+  max_items_per_run: 20
+  # 运行日志保留条数（每个工作流）
+  run_log_keep: 200
+  # 遇到 FloodWait 时最大可接受的等待秒数，超过则本轮放弃
+  max_flood_wait: 600
+
+logging:
+  level: INFO
+  file: data/teleops.log

@@ -1,0 +1,24 @@
+{
+  "name": "teleops-desktop",
+  "productName": "TeleOps",
+  "version": "0.1.0",
+  "description": "TeleOps desktop shell - Telegram channel operations toolkit",
+  "author": "TeleOps",
+  "license": "MIT",
+  "private": true,
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron .",
+    "icon": "node scripts/make-icon.mjs",
+    "fetch-python": "node scripts/fetch-python.mjs",
+    "prepare-build": "node scripts/ensure-runtime.mjs",
+    "pack": "npm run prepare-build && electron-builder --dir",
+    "build": "npm run prepare-build && electron-builder",
+    "build:win": "npm run prepare-build && electron-builder --win",
+    "build:mac": "npm run prepare-build && electron-builder --mac --arm64 --x64"
+  },
+  "devDependencies": {
+    "electron": "^33.2.1",
+    "electron-builder": "^25.1.8"
+  }
+}

@@ -1,0 +1,59 @@
+# ===== 敏感数据：绝对不要提交 =====
+# 真实配置（含后台口令等），模板见 config.example.yaml
+config.yaml
+config.*.yaml
+!config.example.yaml
+.env
+.env.*
+
+# 运行时数据目录：数据库里存着 Telegram api_id/api_hash，
+# sessions/ 里是登录态，等同于账号本身
+data/
+
+# Telethon session 文件（任何位置）
+*.session
+*.session-journal
+
+# ===== Python =====
+__pycache__/
+*.py[cod]
+*.pyo
+*.py.bak
+*.egg-info/
+.eggs/
+/build/
+dist/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# 虚拟环境（含 .venv.windows.bak 之类的备份变体）
+.venv*/
+venv/
+env/
+ENV/
+pyvenv.cfg
+
+# ===== Node / Electron 桌面版 =====
+node_modules/
+desktop/node_modules/
+desktop/dist/
+desktop/runtime/
+desktop/release/
+*.log
+npm-debug.log*
+
+# ===== 编辑器 / 工具 / 系统 =====
+.claude/
+.idea/
+.vscode/
+*.swp
+*~
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ===== 本地临时产物 =====
+*.bak
+*.tmp
+tmp/

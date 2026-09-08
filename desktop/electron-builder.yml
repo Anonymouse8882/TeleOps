@@ -1,0 +1,69 @@
+appId: com.teleops.desktop
+productName: TeleOps
+copyright: TeleOps
+
+directories:
+  output: dist
+  buildResources: build
+
+# 只有 Electron 壳子进 asar，Python 代码走 extraResources（要能被解释器直接读到）
+files:
+  - src/**/*
+  - package.json
+
+extraResources:
+  - from: ../teleops
+    to: app_py/teleops
+    filter: ['**/*', '!**/__pycache__/**', '!**/*.pyc']
+  - from: ../plugins
+    to: app_py/plugins
+    filter: ['**/*', '!**/__pycache__/**', '!**/*.pyc']
+  - from: ../run.py
+    to: app_py/run.py
+  - from: ../requirements.txt
+    to: app_py/requirements.txt
+  - from: ../config.example.yaml
+    to: app_py/config.example.yaml
+  # 可选：npm run fetch-python 下载的独立 Python，放着就会被打进安装包
+  - from: runtime
+    to: runtime
+    filter: ['**/*', '!**/__pycache__/**', '!**/*.pyc', '!**/test/**', '!**/tests/**']
+
+artifactName: ${productName}-${version}-${os}-${arch}.${ext}
+
+win:
+  target:
+    - target: nsis
+      arch: [x64]
+    - target: portable
+      arch: [x64]
+
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: TeleOps
+
+portable:
+  artifactName: ${productName}-${version}-portable.${ext}
+
+mac:
+  category: public.app-category.productivity
+  target:
+    - target: dmg
+      arch: [arm64, x64]
+    - target: zip
+      arch: [arm64, x64]
+  # 本地自用不签名；有开发者证书的话删掉这行即可
+  identity: null
+  hardenedRuntime: false
+
+dmg:
+  # 带上架构：两个架构的 dmg 会并行构建，同名会一起挂到 /Volumes/TeleOps 撞车
+  title: ${productName} ${arch}
+
+linux:
+  target: [AppImage]
+  category: Utility

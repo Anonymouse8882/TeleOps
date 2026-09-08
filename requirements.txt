@@ -1,0 +1,21 @@
+# TeleOps 运行依赖
+telethon==1.36.0
+cryptg==0.4.0                 # Telethon 加密加速（可选但强烈建议）
+
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+python-multipart==0.0.20
+jinja2==3.1.5
+
+sqlalchemy==2.0.36
+aiosqlite==0.20.0
+greenlet==3.1.1
+
+apscheduler==3.11.0
+pydantic==2.10.4
+pyyaml==6.0.2
+
+httpx==0.28.1
+beautifulsoup4==4.12.3
+lxml==5.3.0
+feedparser==6.0.11

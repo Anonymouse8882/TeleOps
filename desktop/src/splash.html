@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'" />
+    <title>TeleOps</title>
+    <style>
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        padding: 26px 28px 22px;
+        background: #111827;
+        color: #e5e7eb;
+        font: 14px/1.6 "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+        user-select: none;
+        cursor: default;
+      }
+      .brand { display: flex; align-items: center; gap: 10px; }
+      .dot {
+        width: 10px; height: 10px; border-radius: 50%;
+        background: #38bdf8;
+        box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.6);
+        animation: pulse 1.6s ease-out infinite;
+      }
+      .dot.error { background: #f87171; animation: none; }
+      @keyframes pulse {
+        70% { box-shadow: 0 0 0 12px rgba(56, 189, 248, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0); }
+      }
+      .brand span { font-size: 13px; letter-spacing: 2px; color: #94a3b8; }
+      h1 { margin: 0; font-size: 19px; font-weight: 600; }
+      .detail { margin: 0; color: #9ca3af; white-space: pre-wrap; font-size: 13px; max-height: 96px; overflow: auto; }
+      pre {
+        flex: 1;
+        margin: 0;
+        padding: 10px 12px;
+        display: none;
+        overflow: auto;
+        background: #0b1120;
+        border: 1px solid #1f2937;
+        border-radius: 8px;
+        color: #94a3b8;
+        font: 12px/1.5 ui-monospace, Consolas, monospace;
+        white-space: pre-wrap;
+        user-select: text;
+        cursor: text;
+      }
+      pre.on { display: block; }
+      .bar { display: flex; gap: 10px; justify-content: flex-end; }
+      button {
+        padding: 7px 16px;
+        border: 1px solid #334155;
+        border-radius: 7px;
+        background: #1e293b;
+        color: #e2e8f0;
+        font-size: 13px;
+        cursor: pointer;
+      }
+      button:hover { background: #273449; }
+      button.primary { background: #0284c7; border-color: #0284c7; color: #fff; }
+      button.primary:hover { background: #0369a1; }
+      .bar { display: none; }
+      .bar.on { display: flex; }
+    </style>
+  </head>
+  <body>
+    <div class="brand"><i class="dot" id="dot"></i><span>TELEOPS</span></div>
+    <h1 id="title">正在启动…</h1>
+    <p class="detail" id="detail"></p>
+    <pre id="log"></pre>
+    <div class="bar" id="bar">
+      <button id="btn-install" style="display: none">下载 Python</button>
+      <button id="btn-log">打开日志</button>
+      <button id="btn-quit">退出</button>
+      <button class="primary" id="btn-retry">重试</button>
+    </div>
+
+    <script>
+      const $ = (id) => document.getElementById(id);
+      const logBox = $('log');
+      const lines = [];
+
+      function show(state) {
+        if (state.phase === 'log') {
+          lines.push(state.line);
+          if (lines.length > 300) lines.shift();
+          logBox.textContent = lines.join('\n');
+          logBox.scrollTop = logBox.scrollHeight;
+          return;
+        }
+        if (state.title) $('title').textContent = state.title;
+        $('detail').textContent = state.detail || '';
+        logBox.classList.toggle('on', Boolean(state.showLog));
+        $('dot').classList.toggle('error', state.phase === 'error');
+        $('bar').classList.toggle('on', state.phase === 'error');
+        $('btn-install').style.display = state.showInstall ? '' : 'none';
+      }
+
+      window.teleops.onState(show);
+      $('btn-retry').onclick = () => {
+        lines.length = 0;
+        logBox.textContent = '';
+        show({ phase: 'busy', title: '正在重试…', detail: '', showLog: true });
+        window.teleops.action('retry');
+      };
+      $('btn-quit').onclick = () => window.teleops.action('quit');
+      $('btn-log').onclick = () => window.teleops.action('open-log');
+      $('btn-install').onclick = () => window.teleops.action('install-python');
+    </script>
+  </body>
+</html>
